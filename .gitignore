@@ -1,0 +1,26 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# Secrets
+.env
+
+# Candidate exercise prompt (not part of the submission)
+AI Engineer Candidate Exercise.pdf
+
+# OS cruft
+.DS_Store
+
+.claude/
+.cursor/
+.vscode/
+.agents
+# Generated database (rebuild with: python db/build_db.py)
+*.db
