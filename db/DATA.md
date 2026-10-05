@@ -14,7 +14,7 @@ SQLite database of Brooklyn Nets home games at Barclays Center for 2025-26 and 2
 
 ## Build
 
-`build_db.py` replaces `data/bkse.db`. It applies `schema.sql`, then fills the tables. The default seed is 42. `--out` and `--seed` change the file and the random draws.
+`build_db.py` replaces `db/data/bkse.db`. It applies `schema.sql`, then fills the tables. The default seed is 42. `--out` and `--seed` change the file and the random draws.
 
 Teams are the 30 NBA clubs. The seat map is generated from the section layout in the script: courtside, lower bowl 1-31, upper bowl 201-231. Each seat gets a base price from its location, with a small random wobble.
 

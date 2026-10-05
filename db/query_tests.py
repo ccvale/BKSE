@@ -7,6 +7,7 @@ from loguru import logger
 
 DB_PATH = Path(__file__).resolve().parent / 'data' / 'bkse.db'
 
+# game 72 is the id from seed 42. another seed will not match.
 SAMPLE = '''
 SELECT s.section_id, s.row_label, MIN(s.seat_number) AS start_seat, MAX(s.seat_number) AS end_seat, COUNT(*) AS cnt
 FROM tickets t

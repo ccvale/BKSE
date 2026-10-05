@@ -1,7 +1,5 @@
 '''Streamlit UI for asking natural-language questions of the ticketing database.'''
 
-from datetime import date
-
 from anthropic import APIConnectionError, AuthenticationError, InternalServerError, PermissionDeniedError, RateLimitError
 from dotenv import load_dotenv
 from langchain_core.messages import AIMessage, HumanMessage
@@ -9,6 +7,9 @@ from loguru import logger
 import streamlit as st
 
 from agent import agent
+
+# snapshot date from db/build_db.py. ticket rows do not move after this day.
+AS_OF_DATE = '2026-10-01'
 
 load_dotenv()
 
@@ -103,7 +104,7 @@ show_message(user_message)
 try:
     with st.spinner('Thinking...'):
         result = get_agent().invoke({
-            'input': f'Today is {date.today().isoformat()}.\n{question}',
+            'input': f'Today is {AS_OF_DATE}.\n{question}',
             'chat_history': history,
         })
 except FileNotFoundError as exc:
