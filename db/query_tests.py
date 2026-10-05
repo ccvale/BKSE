@@ -1,33 +1,27 @@
-"""Ad-hoc SQL against the built ticketing database."""
+'''Ad-hoc SQL against the built ticketing database.'''
 
 import sqlite3
 from pathlib import Path
 
 from loguru import logger
 
-DB_PATH = Path(__file__).resolve().parent.parent / "data" / "bkse.db"
+DB_PATH = Path(__file__).resolve().parent / 'data' / 'bkse.db'
 
-SAMPLE = """
-SELECT game_date, tip_time_et, section_code, row_label, seat_number, list_price
-FROM v_tickets
-WHERE opponent = 'New York Knicks'
-AND status = 'available'
-AND game_date = (
-    SELECT MIN(g.game_date)
-    FROM games g JOIN teams t ON t.team_id = g.away_team_id
-    WHERE t.name = 'New York Knicks'
-        AND g.game_date >= (SELECT value FROM settings WHERE key = 'as_of_date'))
-ORDER BY list_price
-LIMIT 1;
-"""
+SAMPLE = '''
+SELECT s.section_id, s.row_label, MIN(s.seat_number) AS start_seat, MAX(s.seat_number) AS end_seat, COUNT(*) AS cnt
+FROM tickets t
+JOIN seats s ON t.seat_id = s.seat_id
+JOIN sections sec ON s.section_id = sec.section_id
+WHERE t.game_id = 72
+  AND t.status = 'available'
+  AND sec.level = 'Upper Bowl'
+GROUP BY s.section_id, s.row_label
+HAVING cnt >= 12
+ORDER BY cnt DESC
+'''
 
-
-def test_query(query: str) -> list[sqlite3.Row]:
+if __name__ == '__main__':
     with sqlite3.connect(DB_PATH) as conn:
         conn.row_factory = sqlite3.Row
-        return conn.execute(query).fetchall()
-
-
-if __name__ == "__main__":
-    for row in test_query(SAMPLE):
-        logger.info(dict(row))
+        for row in conn.execute(SAMPLE):
+            logger.info(dict(row))

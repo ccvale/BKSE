@@ -1,16 +1,10 @@
 -- BKSE ticketing database (SQLite)
--- One home venue (Barclays Center), Brooklyn Nets home games for two seasons,
+-- Brooklyn Nets home games at Barclays Center for two seasons,
 -- a seat-level manifest, and one ticket row per seat per game.
--- Data is synthetic except team names, schedules and 2025-26 results/attendance.
+-- Data is synthetic except team names, schedules, and 2025-26 results/attendance.
+-- Prices and availability are a snapshot as of 2026-10-01.
 
 PRAGMA foreign_keys = ON;
-
--- Key/value settings. 'as_of_date' is "today" for the dataset: use it for
--- "next game", "last month", etc. instead of the real clock.
-CREATE TABLE settings (
-    key   TEXT PRIMARY KEY,
-    value TEXT NOT NULL
-);
 
 CREATE TABLE teams (
     team_id      INTEGER PRIMARY KEY,
@@ -20,13 +14,6 @@ CREATE TABLE teams (
     nickname     TEXT NOT NULL,          -- e.g. 'Knicks'
     conference   TEXT NOT NULL CHECK (conference IN ('East', 'West')),
     division     TEXT NOT NULL
-);
-
-CREATE TABLE venues (
-    venue_id            INTEGER PRIMARY KEY,
-    name                TEXT NOT NULL,
-    city                TEXT NOT NULL,
-    basketball_capacity INTEGER NOT NULL
 );
 
 CREATE TABLE seasons (
@@ -41,9 +28,7 @@ CREATE TABLE games (
     season_id        TEXT    NOT NULL REFERENCES seasons(season_id),
     game_date        TEXT    NOT NULL,   -- ISO date, local (ET)
     tip_time_et      TEXT,               -- 'HH:MM' 24h, Eastern
-    home_team_id     INTEGER NOT NULL REFERENCES teams(team_id),
     away_team_id     INTEGER NOT NULL REFERENCES teams(team_id),
-    venue_id         INTEGER NOT NULL REFERENCES venues(venue_id),
     game_type        TEXT    NOT NULL CHECK (game_type IN ('regular', 'nba_cup')),
     status           TEXT    NOT NULL CHECK (status IN ('scheduled', 'final')),
     home_score       INTEGER,            -- NULL until final
@@ -55,13 +40,11 @@ CREATE INDEX idx_games_date ON games(game_date);
 -- Price level groups sections that are priced alike.
 CREATE TABLE sections (
     section_id   INTEGER PRIMARY KEY,
-    venue_id     INTEGER NOT NULL REFERENCES venues(venue_id),
-    section_code TEXT    NOT NULL,       -- as printed on the ticket: '8', '224', 'CS1'
-    section_name TEXT    NOT NULL,       -- e.g. 'Section 8', 'Courtside Nets Bench Side'
+    section_code TEXT    NOT NULL UNIQUE, -- as printed on the ticket: '8', '224', 'CS1'
+    section_name TEXT    NOT NULL,        -- e.g. 'Section 8', 'Courtside Nets Bench Side'
     level        TEXT    NOT NULL CHECK (level IN ('Courtside', 'Lower Bowl', 'Upper Bowl')),
     position     TEXT    NOT NULL CHECK (position IN ('Sideline Center', 'Sideline', 'Corner', 'Baseline')),
-    price_level  TEXT    NOT NULL,       -- e.g. 'Courtside Sideline', 'Lower Corner'
-    UNIQUE (venue_id, section_code)
+    price_level  TEXT    NOT NULL         -- e.g. 'Courtside Sideline', 'Lower Corner'
 );
 
 CREATE TABLE seats (
@@ -138,7 +121,8 @@ JOIN seats    st  ON st.seat_id   = t.seat_id
 JOIN sections s   ON s.section_id = st.section_id;
 
 -- Runs of adjacent available seats (same game, section and row, consecutive
--- seat numbers). Use for "N seats together" questions: filter seats_in_block >= N.
+-- seat numbers). Use for 'N seats together' questions: filter seats_in_block >= N.
+-- Aggregates are CAST so each column has a type. Untyped columns are dropped by the schema tool.
 CREATE VIEW v_available_blocks AS
 WITH avail AS (
     SELECT
@@ -166,11 +150,11 @@ SELECT
     s.price_level,
     a.row_label,
     a.row_order,
-    MIN(a.seat_number)     AS first_seat,
-    MAX(a.seat_number)     AS last_seat,
-    COUNT(*)               AS seats_in_block,
-    MIN(a.list_price)      AS min_price,
-    MAX(a.list_price)      AS max_price
+    CAST(MIN(a.seat_number) AS INTEGER) AS first_seat,
+    CAST(MAX(a.seat_number) AS INTEGER) AS last_seat,
+    CAST(COUNT(*) AS INTEGER)           AS seats_in_block,
+    CAST(MIN(a.list_price) AS REAL)     AS min_price,
+    CAST(MAX(a.list_price) AS REAL)     AS max_price
 FROM avail a
 JOIN games    g   ON g.game_id    = a.game_id
 JOIN teams    opp ON opp.team_id  = g.away_team_id
