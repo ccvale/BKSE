@@ -1,0 +1,81 @@
+game_date,tip_time_et,opponent,is_home,nets_score,opponent_score,attendance,game_type
+2026-10-21,19:30,Charlotte Hornets,1,103,110,17548,regular
+2026-10-24,19:30,Cleveland Cavaliers,0,121,125,19432,regular
+2026-10-25,18:00,Indiana Pacers,1,109,136,17548,regular
+2026-10-27,19:30,Boston Celtics,0,124,125,19156,regular
+2026-10-30,19:30,Detroit Pistons,1,,,,nba_cup
+2026-11-01,17:00,Indiana Pacers,0,,,,regular
+2026-11-02,19:30,New York Knicks,0,,,,regular
+2026-11-04,19:30,Charlotte Hornets,1,,,,regular
+2026-11-07,19:30,Atlanta Hawks,0,,,,regular
+2026-11-08,19:30,Dallas Mavericks,0,,,,regular
+2026-11-11,20:00,New Orleans Pelicans,0,,,,regular
+2026-11-14,20:00,Memphis Grizzlies,0,,,,regular
+2026-11-16,19:30,Philadelphia 76ers,1,,,,regular
+2026-11-18,19:30,Chicago Bulls,1,,,,regular
+2026-11-20,19:30,Orlando Magic,1,,,,nba_cup
+2026-11-23,19:30,Minnesota Timberwolves,0,,,,regular
+2026-11-25,20:00,Milwaukee Bucks,0,,,,nba_cup
+2026-11-27,19:30,Toronto Raptors,0,,,,nba_cup
+2026-11-28,18:00,Charlotte Hornets,0,,,,regular
+2026-11-30,19:30,Oklahoma City Thunder,1,,,,regular
+2026-12-02,20:00,Oklahoma City Thunder,0,,,,regular
+2026-12-13,15:00,Boston Celtics,1,,,,regular
+2026-12-14,19:00,Detroit Pistons,0,,,,regular
+2026-12-16,19:30,Dallas Mavericks,1,,,,regular
+2026-12-18,19:30,Orlando Magic,1,,,,regular
+2026-12-20,15:00,Washington Wizards,1,,,,regular
+2026-12-21,19:30,Portland Trail Blazers,1,,,,regular
+2026-12-23,19:30,San Antonio Spurs,1,,,,regular
+2026-12-26,18:00,New Orleans Pelicans,1,,,,regular
+2026-12-27,18:00,New York Knicks,0,,,,regular
+2026-12-29,22:00,Portland Trail Blazers,0,,,,regular
+2026-12-31,18:00,Sacramento Kings,0,,,,regular
+2027-01-02,20:30,Golden State Warriors,0,,,,regular
+2027-01-04,21:00,Utah Jazz,0,,,,regular
+2027-01-06,19:30,Utah Jazz,1,,,,regular
+2027-01-07,19:30,Miami Heat,1,,,,regular
+2027-01-09,18:00,Houston Rockets,1,,,,regular
+2027-01-11,19:00,Indiana Pacers,0,,,,regular
+2027-01-12,19:30,Miami Heat,0,,,,regular
+2027-01-14,19:00,Philadelphia 76ers,0,,,,regular
+2027-01-16,19:00,Boston Celtics,0,,,,regular
+2027-01-20,19:00,Chicago Bulls,1,,,,regular
+2027-01-21,19:30,Cleveland Cavaliers,1,,,,regular
+2027-01-23,18:00,Toronto Raptors,1,,,,regular
+2027-01-25,19:30,Miami Heat,1,,,,regular
+2027-01-27,19:30,Phoenix Suns,1,,,,regular
+2027-01-29,19:30,LA Clippers,1,,,,regular
+2027-01-31,18:00,Orlando Magic,0,,,,regular
+2027-02-01,19:30,New York Knicks,1,,,,regular
+2027-02-04,19:30,Los Angeles Lakers,1,,,,regular
+2027-02-06,18:00,Washington Wizards,1,,,,regular
+2027-02-08,19:00,Philadelphia 76ers,0,,,,regular
+2027-02-09,19:30,Minnesota Timberwolves,1,,,,regular
+2027-02-12,19:00,Washington Wizards,0,,,,regular
+2027-02-14,13:00,Miami Heat,0,,,,regular
+2027-02-17,19:30,Atlanta Hawks,1,,,,regular
+2027-02-25,19:30,Philadelphia 76ers,1,,,,regular
+2027-02-27,20:00,Chicago Bulls,0,,,,regular
+2027-03-01,21:00,Denver Nuggets,0,,,,regular
+2027-03-03,21:00,Phoenix Suns,0,,,,regular
+2027-03-04,22:30,LA Clippers,0,,,,regular
+2027-03-07,22:30,Los Angeles Lakers,0,,,,regular
+2027-03-09,19:30,Milwaukee Bucks,1,,,,regular
+2027-03-11,20:00,Atlanta Hawks,0,,,,regular
+2027-03-13,15:00,Detroit Pistons,0,,,,regular
+2027-03-15,19:30,Indiana Pacers,1,,,,regular
+2027-03-17,20:30,Houston Rockets,0,,,,regular
+2027-03-18,20:00,San Antonio Spurs,0,,,,regular
+2027-03-21,15:00,Sacramento Kings,1,,,,regular
+2027-03-23,19:30,Boston Celtics,1,,,,regular
+2027-03-25,19:30,Denver Nuggets,1,,,,regular
+2027-03-28,15:00,Memphis Grizzlies,1,,,,regular
+2027-03-29,19:30,Golden State Warriors,1,,,,regular
+2027-03-31,19:30,Cleveland Cavaliers,1,,,,regular
+2027-04-02,19:30,New York Knicks,1,,,,regular
+2027-04-04,14:00,Milwaukee Bucks,0,,,,regular
+2027-04-05,19:00,Cleveland Cavaliers,0,,,,regular
+2027-04-07,19:30,Toronto Raptors,0,,,,regular
+2027-04-09,19:00,Charlotte Hornets,0,,,,regular
+2027-04-11,18:00,Toronto Raptors,1,,,,regular

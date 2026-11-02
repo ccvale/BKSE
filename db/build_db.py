@@ -5,7 +5,8 @@ Usage:
     python db/build_db.py --out other.db --seed 7
 
 What is real vs synthetic:
-- Real: team names, the Nets' 2025-26 home results and attendance, the announced 2026-27 home schedule.
+- Real: team names, the full 2025-26 schedule and results, the announced 2026-27 schedule, and 2026-27 results played before the snapshot date.
+- Tickets are simulated for home games only. Road games are on the schedule and have no seats.
 - Modeled: the Barclays Center seat map (real section numbering, approximate row/seat counts).
 - Synthetic: every price, sale, order and seat status. Prices follow simple, documented drivers
   (opponent draw, day of week, holidays, seat location, days until the game) so trends are learnable.
@@ -27,7 +28,7 @@ DB_DIR = Path(__file__).resolve().parent
 RAW = DB_DIR / 'data' / 'raw'
 SCHEMA = DB_DIR / 'schema.sql'
 
-AS_OF_DATE = date(2026, 10, 1)           # 'today' inside the dataset
+AS_OF_DATE = date(2026, 10, 28)          # 'today' inside the dataset
 SINGLE_GAME_ONSALE = {'2025-26': date(2025, 8, 20), '2026-27': date(2026, 8, 20)}
 SEASON_TICKET_ORDER_DATE = {'2025-26': date(2025, 6, 15), '2026-27': date(2026, 6, 15)}
 SEASONS = {'2025-26': ('2025-10-21', '2026-04-12'), '2026-27': ('2026-10-20', '2027-04-11')}
@@ -148,6 +149,7 @@ class Game:
     opponent_abbr: str
     status: str
     attendance: int | None
+    is_home: int
     demand: float = 1.0
 
 
@@ -234,35 +236,67 @@ def build_seat_map(con: sqlite3.Connection, rng: random.Random) -> list[Seat]:
     return seats
 
 
+def load_season_csv(con: sqlite3.Connection, season_id: str, path: Path, team_ids: dict[str, int], name_to_abbr: dict[str, str], games: list[Game]) -> None:
+    '''Load one season file. A row with a score is final, and a row without one stays scheduled.'''
+    with open(path, newline='') as f:
+        for row in csv.DictReader(f):
+            abbr = name_to_abbr[row['opponent']]
+            is_home = int(row['is_home'])
+            played = (row.get('nets_score') or '').strip() != ''
+            if played:
+                cur = con.execute(
+                    """INSERT INTO games (season_id, game_date, tip_time_et, is_home, opponent_team_id,
+                       game_type, status, nets_score, opponent_score, attendance)
+                       VALUES (?, ?, ?, ?, ?, ?, 'final', ?, ?, ?)""",
+                    (season_id, row['game_date'], row['tip_time_et'], is_home, team_ids[abbr], row['game_type'], int(row['nets_score']), int(row['opponent_score']), int(row['attendance'])),
+                )
+                games.append(Game(cur.lastrowid, season_id, date.fromisoformat(row['game_date']), abbr, 'final', int(row['attendance']), is_home))
+            else:
+                cur = con.execute(
+                    """INSERT INTO games (season_id, game_date, tip_time_et, is_home, opponent_team_id,
+                       game_type, status) VALUES (?, ?, ?, ?, ?, ?, 'scheduled')""",
+                    (season_id, row['game_date'], row['tip_time_et'], is_home, team_ids[abbr], row['game_type']),
+                )
+                games.append(Game(cur.lastrowid, season_id, date.fromisoformat(row['game_date']), abbr, 'scheduled', None, is_home))
+
+
+def check_snapshot(games: list[Game]) -> None:
+    '''Fail the build when a game status does not match the snapshot date.'''
+    as_of = AS_OF_DATE.isoformat()
+    for g in games:
+        played = g.game_date < AS_OF_DATE
+        if played and g.status != 'final':
+            raise ValueError(f'{g.game_date.isoformat()} is before {as_of} but status is {g.status}')
+        if not played and g.status != 'scheduled':
+            raise ValueError(f'{g.game_date.isoformat()} is on or after {as_of} but status is {g.status}')
+
+
+def check_tickets(con: sqlite3.Connection) -> None:
+    '''Fail the build when a road game has a ticket or a home game has none.'''
+    road = con.execute(
+        'SELECT COUNT(*) FROM tickets t JOIN games g ON g.game_id = t.game_id WHERE g.is_home = 0'
+    ).fetchone()[0]
+    if road:
+        raise ValueError(f'{road} ticket rows are on road games')
+    missing = con.execute(
+        '''SELECT COUNT(*) FROM games g
+           WHERE g.is_home = 1 AND NOT EXISTS (SELECT 1 FROM tickets t WHERE t.game_id = g.game_id)'''
+    ).fetchone()[0]
+    if missing:
+        raise ValueError(f'{missing} home games have no tickets')
+
+
 def load_games(con: sqlite3.Connection, team_ids: dict[str, int]) -> list[Game]:
     for sid, (start, end) in SEASONS.items():
         con.execute('INSERT INTO seasons VALUES (?,?,?)', (sid, start, end))
     name_to_abbr = {t[0]: t[1] for t in TEAMS}
     games: list[Game] = []
-
-    with open(RAW / 'nets_2025_26_home_results.csv', newline='') as f:
-        for row in csv.DictReader(f):
-            abbr = name_to_abbr[row['opponent']]
-            cur = con.execute(
-                """INSERT INTO games (season_id, game_date, tip_time_et, away_team_id,
-                   game_type, status, home_score, away_score, attendance)
-                   VALUES ('2025-26', ?, ?, ?, ?, 'final', ?, ?, ?)""",
-                (row['game_date'], row['tip_time_et'], team_ids[abbr], row['game_type'], int(row['nets_score']), int(row['opponent_score']), int(row['attendance'])),
-            )
-            games.append(Game(cur.lastrowid, '2025-26', date.fromisoformat(row['game_date']), abbr, 'final', int(row['attendance'])))
-
-    with open(RAW / 'nets_2026_27_home_schedule.csv', newline='') as f:
-        for row in csv.DictReader(f):
-            abbr = name_to_abbr[row['opponent']]
-            cur = con.execute(
-                """INSERT INTO games (season_id, game_date, tip_time_et, away_team_id,
-                   game_type, status) VALUES ('2026-27', ?, ?, ?, ?, 'scheduled')""",
-                (row['game_date'], row['tip_time_et'], team_ids[abbr], row['game_type']),
-            )
-            games.append(Game(cur.lastrowid, '2026-27', date.fromisoformat(row['game_date']), abbr, 'scheduled', None))
+    load_season_csv(con, '2025-26', RAW / 'nets_2025_26_games.csv', team_ids, name_to_abbr, games)
+    load_season_csv(con, '2026-27', RAW / 'nets_2026_27_games.csv', team_ids, name_to_abbr, games)
+    check_snapshot(games)
 
     for sid in SEASONS:
-        season_games = sorted((g for g in games if g.season_id == sid), key=lambda g: g.game_date)
+        season_games = sorted((g for g in games if g.season_id == sid and g.is_home), key=lambda g: g.game_date)
         for i, g in enumerate(season_games):
             d = OPPONENT_DRAW[g.opponent_abbr] * WEEKDAY_FACTOR[g.game_date.weekday()]
             if i == 0:
@@ -424,13 +458,14 @@ def build(out: Path, seed: int) -> None:
 
     for season_id in SEASONS:
         owners = season_ticket_accounts(seats, rng)       # accounts turn over between seasons
-        for g in (g for g in games if g.season_id == season_id):
+        for g in (g for g in games if g.season_id == season_id and g.is_home):
             orders, tickets = simulate_game(g, seats, owners, rng, next_order_id)
             con.executemany('INSERT INTO orders VALUES (?,?,?,?,?,?)', orders)
             con.executemany(
                 'INSERT INTO tickets (game_id, seat_id, status, list_price, sold_price, sold_at, order_id) VALUES (?,?,?,?,?,?,?)',
                 tickets,
             )
+    check_tickets(con)
     con.commit()
     con.execute('ANALYZE')
     con.commit()

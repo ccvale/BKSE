@@ -58,18 +58,18 @@ After the database is built, `uv run tools/sql_query.py` checks the query tool, 
 
 ## Dataset
 
-Team names, both home schedules, and the 2025-26 scores, attendance, tip times, and Cup flags are real. The seat map is modeled from real section numbers. Every price, order, and ticket status in both seasons is synthetic. The database is a snapshot of 2026-10-01, and the agent treats that day as today. The views are `v_tickets` and `v_available_blocks`. Column detail, the pricing model, and known limits are in [db/DATA.md](db/DATA.md).
+Team names, both full schedules, the 2025-26 results, and 2026-27 results through 2026-10-27 are real, including scores, attendance, tip times, and Cup flags. The seat map is modeled from real section numbers. Every price, order, and ticket status is synthetic, and those rows exist only for home games. The database is a snapshot of 2026-10-28, and the agent treats that day as today. Ticket views keep `is_home = 1`. The views are `v_tickets` and `v_available_blocks`. Column detail, the pricing model, and known limits are in [db/DATA.md](db/DATA.md).
 
 
 | Table      | Rows   | Grain                                                   |
 | ---------- | ------ | ------------------------------------------------------- |
 | `teams`    | 30     | NBA team, including the Nets                            |
 | `seasons`  | 2      | `2025-26`, `2026-27`                                    |
-| `games`    | 81     | Nets home game. Opponent is `away_team_id`              |
+| `games`    | 162    | One Nets game, home or road. Filter `is_home = 1` for Barclays |
 | `sections` | 66     | 4 courtside, lower 1-31, upper 201-231                  |
 | `seats`    | 17,095 | One physical seat. Adjacent `seat_number`s sit together |
 | `orders`   | ~344k  | One purchase: season ticket, single game, or group      |
-| `tickets`  | ~1.38M | One seat at one game                                    |
+| `tickets`  | ~1.38M | One seat at one home game. Road games have none         |
 
 
 ## Approach
@@ -153,7 +153,7 @@ Simply converse with the agent! You can ask any questions related to the scope o
 - When do the Nets play the Knicks next?
 - What is the cheapest available seat for that game?
 
-Questions about 2024 events, or about event categories, are not in this database. It is Nets home games for 2025-26 and 2026-27.
+Questions about 2024 events, or about event categories, are not in this database. It is the Nets schedule for 2025-26 and 2026-27. Tickets are the home games.
 
 If your current chat is going too long, you can start a new chat, which will refresh the agent context.
 

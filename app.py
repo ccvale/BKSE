@@ -9,7 +9,7 @@ import streamlit as st
 from agent import agent
 
 # snapshot date from db/build_db.py. ticket rows do not move after this day.
-AS_OF_DATE = '2026-10-01'
+AS_OF_DATE = '2026-10-28'
 
 load_dotenv()
 

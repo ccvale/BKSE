@@ -1,0 +1,83 @@
+game_date,tip_time_et,opponent,is_home,nets_score,opponent_score,attendance,game_type
+2025-10-22,19:00,Charlotte Hornets,0,117,136,19516,regular
+2025-10-24,19:30,Cleveland Cavaliers,1,124,131,17548,regular
+2025-10-26,14:00,San Antonio Spurs,0,107,118,19016,regular
+2025-10-27,20:00,Houston Rockets,0,109,137,18055,regular
+2025-10-29,19:30,Atlanta Hawks,1,112,117,17548,regular
+2025-11-02,18:00,Philadelphia 76ers,1,105,129,17548,regular
+2025-11-03,19:00,Minnesota Timberwolves,1,109,125,17287,regular
+2025-11-05,19:00,Indiana Pacers,0,112,103,16103,regular
+2025-11-07,19:30,Detroit Pistons,1,107,125,17548,nba_cup
+2025-11-09,18:00,New York Knicks,0,98,134,19812,regular
+2025-11-11,19:30,Toronto Raptors,1,109,119,17233,regular
+2025-11-14,19:00,Orlando Magic,0,98,105,17902,nba_cup
+2025-11-16,18:00,Washington Wizards,0,129,106,14164,regular
+2025-11-18,19:30,Boston Celtics,1,99,113,18118,regular
+2025-11-21,19:30,Boston Celtics,0,113,105,19156,nba_cup
+2025-11-23,18:00,Toronto Raptors,0,109,119,18038,regular
+2025-11-24,19:30,New York Knicks,1,100,113,18019,regular
+2025-11-28,19:30,Philadelphia 76ers,1,103,115,17809,nba_cup
+2025-11-29,20:00,Milwaukee Bucks,0,99,116,16396,regular
+2025-12-01,19:30,Charlotte Hornets,1,116,103,16443,regular
+2025-12-03,20:00,Chicago Bulls,0,113,103,20633,regular
+2025-12-04,19:30,Utah Jazz,1,110,123,16485,regular
+2025-12-06,17:00,New Orleans Pelicans,1,119,101,17055,regular
+2025-12-12,20:30,Dallas Mavericks,0,111,119,19032,regular
+2025-12-14,18:00,Milwaukee Bucks,1,127,82,16439,regular
+2025-12-18,19:30,Miami Heat,1,95,106,17548,regular
+2025-12-21,18:00,Toronto Raptors,1,96,81,17548,regular
+2025-12-23,19:00,Philadelphia 76ers,0,114,106,19746,regular
+2025-12-27,20:00,Minnesota Timberwolves,0,123,107,18978,regular
+2025-12-29,19:30,Golden State Warriors,1,107,120,18163,regular
+2026-01-01,18:00,Houston Rockets,1,96,120,18003,regular
+2026-01-02,19:00,Washington Wizards,0,99,119,16486,regular
+2026-01-04,15:30,Denver Nuggets,1,127,115,17548,regular
+2026-01-07,19:30,Orlando Magic,1,103,104,16916,regular
+2026-01-09,19:30,LA Clippers,1,105,121,17548,regular
+2026-01-11,15:30,Memphis Grizzlies,0,98,103,15578,regular
+2026-01-12,20:30,Dallas Mavericks,0,105,113,18632,regular
+2026-01-14,20:00,New Orleans Pelicans,0,113,116,16201,regular
+2026-01-16,19:30,Chicago Bulls,1,112,109,17548,regular
+2026-01-18,19:00,Chicago Bulls,0,102,124,19753,regular
+2026-01-19,19:30,Phoenix Suns,1,117,126,17344,regular
+2026-01-21,19:30,New York Knicks,0,66,120,19812,regular
+2026-01-23,19:30,Boston Celtics,1,126,130,17727,regular
+2026-01-25,21:00,LA Clippers,0,89,126,17927,regular
+2026-01-27,21:00,Phoenix Suns,0,102,106,17071,regular
+2026-01-29,21:00,Denver Nuggets,0,103,107,19630,regular
+2026-01-30,21:30,Utah Jazz,0,109,99,18186,regular
+2026-02-01,18:00,Detroit Pistons,0,77,130,19899,regular
+2026-02-03,19:30,Los Angeles Lakers,1,109,125,18248,regular
+2026-02-05,19:00,Orlando Magic,0,98,118,18093,regular
+2026-02-07,15:00,Washington Wizards,1,127,113,17548,regular
+2026-02-09,19:30,Chicago Bulls,1,123,115,17038,regular
+2026-02-11,19:30,Indiana Pacers,1,110,115,16779,regular
+2026-02-19,19:00,Cleveland Cavaliers,0,84,112,19432,regular
+2026-02-20,20:00,Oklahoma City Thunder,0,86,105,18203,regular
+2026-02-22,15:30,Atlanta Hawks,0,104,115,17121,regular
+2026-02-24,19:30,Dallas Mavericks,1,114,123,16510,regular
+2026-02-26,19:30,San Antonio Spurs,1,110,126,17548,regular
+2026-02-27,19:30,Boston Celtics,0,111,148,19156,regular
+2026-03-01,15:30,Cleveland Cavaliers,1,102,106,17804,regular
+2026-03-03,19:30,Miami Heat,0,98,124,19700,regular
+2026-03-05,19:30,Miami Heat,0,110,126,19700,regular
+2026-03-07,18:00,Detroit Pistons,0,107,105,20062,regular
+2026-03-09,19:30,Memphis Grizzlies,1,126,115,16543,regular
+2026-03-10,19:30,Detroit Pistons,1,100,138,17548,regular
+2026-03-12,19:30,Atlanta Hawks,0,97,108,15526,regular
+2026-03-14,13:00,Philadelphia 76ers,0,97,104,18418,regular
+2026-03-16,19:30,Portland Trail Blazers,1,95,114,17030,regular
+2026-03-18,19:30,Oklahoma City Thunder,1,92,121,17548,regular
+2026-03-20,19:30,New York Knicks,1,92,93,18017,regular
+2026-03-22,18:00,Sacramento Kings,0,122,126,16289,regular
+2026-03-23,22:00,Portland Trail Blazers,0,99,134,17059,regular
+2026-03-25,22:00,Golden State Warriors,0,106,109,18064,regular
+2026-03-27,22:30,Los Angeles Lakers,0,99,116,18997,regular
+2026-03-29,18:00,Sacramento Kings,1,116,99,17548,regular
+2026-03-31,19:30,Charlotte Hornets,1,86,117,18027,regular
+2026-04-03,19:30,Atlanta Hawks,1,107,141,17548,regular
+2026-04-05,15:30,Washington Wizards,1,121,115,17257,regular
+2026-04-07,19:30,Milwaukee Bucks,1,96,90,16834,regular
+2026-04-09,19:30,Indiana Pacers,1,94,123,17548,regular
+2026-04-10,20:00,Milwaukee Bucks,0,108,125,17379,regular
+2026-04-12,18:00,Toronto Raptors,0,101,136,18778,regular

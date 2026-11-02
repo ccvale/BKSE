@@ -1,8 +1,8 @@
 -- BKSE ticketing database (SQLite)
--- Brooklyn Nets home games at Barclays Center for two seasons,
--- a seat-level manifest, and one ticket row per seat per game.
--- Data is synthetic except team names, schedules, and 2025-26 results/attendance.
--- Prices and availability are a snapshot as of 2026-10-01.
+-- Full Brooklyn Nets schedule for two seasons. Tickets exist only for home games
+-- at Barclays Center: one ticket row per seat per home game.
+-- Data is synthetic except team names, the schedules, 2025-26 results, and 2026-27 results through 2026-10-27.
+-- Prices and availability are a snapshot as of 2026-10-28.
 
 PRAGMA foreign_keys = ON;
 
@@ -22,18 +22,19 @@ CREATE TABLE seasons (
     end_date   TEXT NOT NULL
 );
 
--- Brooklyn Nets home games only.
+-- Full Nets schedule. Filter is_home = 1 for Barclays tickets.
 CREATE TABLE games (
     game_id          INTEGER PRIMARY KEY,
     season_id        TEXT    NOT NULL REFERENCES seasons(season_id),
     game_date        TEXT    NOT NULL,   -- ISO date, local (ET)
     tip_time_et      TEXT,               -- 'HH:MM' 24h, Eastern
-    away_team_id     INTEGER NOT NULL REFERENCES teams(team_id),
+    is_home          INTEGER NOT NULL CHECK (is_home IN (0, 1)), -- 1 at Barclays, 0 on the road
+    opponent_team_id INTEGER NOT NULL REFERENCES teams(team_id),
     game_type        TEXT    NOT NULL CHECK (game_type IN ('regular', 'nba_cup')),
     status           TEXT    NOT NULL CHECK (status IN ('scheduled', 'final')),
-    home_score       INTEGER,            -- NULL until final
-    away_score       INTEGER,
-    attendance       INTEGER             -- announced attendance, NULL until final
+    nets_score       INTEGER,            -- NULL until final
+    opponent_score   INTEGER,
+    attendance       INTEGER             -- announced attendance, NULL until final. On the road this is that arena
 );
 CREATE INDEX idx_games_date ON games(game_date);
 
@@ -69,7 +70,7 @@ CREATE TABLE orders (
 );
 CREATE INDEX idx_orders_game ON orders(game_id);
 
--- One row per seat per game: the game's full inventory.
+-- One row per seat per home game. Road games have no ticket rows.
 --   available: on sale now at list_price
 --   sold:      sold_price / sold_at / order_id are set
 --   held:      not on sale (team, league or production holds)
@@ -116,9 +117,10 @@ SELECT
     t.order_id
 FROM tickets t
 JOIN games    g   ON g.game_id    = t.game_id
-JOIN teams    opp ON opp.team_id  = g.away_team_id
+JOIN teams    opp ON opp.team_id  = g.opponent_team_id
 JOIN seats    st  ON st.seat_id   = t.seat_id
-JOIN sections s   ON s.section_id = st.section_id;
+JOIN sections s   ON s.section_id = st.section_id
+WHERE g.is_home = 1;
 
 -- Runs of adjacent available seats (same game, section and row, consecutive
 -- seat numbers). Use for 'N seats together' questions: filter seats_in_block >= N.
@@ -157,6 +159,7 @@ SELECT
     CAST(MAX(a.list_price) AS REAL)     AS max_price
 FROM avail a
 JOIN games    g   ON g.game_id    = a.game_id
-JOIN teams    opp ON opp.team_id  = g.away_team_id
+JOIN teams    opp ON opp.team_id  = g.opponent_team_id
 JOIN sections s   ON s.section_id = a.section_id
+WHERE g.is_home = 1
 GROUP BY a.game_id, a.section_id, a.row_label, a.grp;
